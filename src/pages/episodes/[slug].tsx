@@ -23,14 +23,19 @@ type EpisodeProps = {
     episode: Episode;
 }
 export default function Episode({ episode }: EpisodeProps) {
+    const router = useRouter();
+
+    if(router.isFallback){
+        return <p>Carregando</p>
+    }
 
     return (
         <div className={styles.episode}>
             <div className={styles.thumbnailContainer}>
                 <Link href="/">
-                <button type="button">
-                    <img src="/arrow-left.svg" alt="Voltar" />
-                </button>
+                    <button type="button">
+                        <img src="/arrow-left.svg" alt="Voltar" />
+                    </button>
                 </Link>
                 <Image
                     width={700}
@@ -39,7 +44,7 @@ export default function Episode({ episode }: EpisodeProps) {
                     objectFit="cover"
                 />
                 <button type="button">
-                <img src="/play.svg" alt="tocar episódio "/>
+                    <img src="/play.svg" alt="tocar episódio " />
                 </button>
             </div>
             <header>
@@ -49,14 +54,15 @@ export default function Episode({ episode }: EpisodeProps) {
                 <span>{episode.durationAsString}</span>
             </header>
 
-            <div className={styles.description} dangerouslySetInnerHTML= {{__html: episode.description}}>
+            <div className={styles.description} dangerouslySetInnerHTML={{ __html: episode.description }}>
             </div>
         </div>
     )
 }
 export const getStaticPaths: GetStaticPaths = async () => {
     return {
-        paths: [],
+        paths: [
+        ],
         fallback: 'blocking'
     }
 }
@@ -75,9 +81,9 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
         url: data.file.url,
     }
     return {
-       props:{
-           episode,
-       },
-       revalidate: 60 * 60 * 24 // 24 hours
+        props: {
+            episode,
+        },
+        revalidate: 60 * 60 * 24 // 24 hours
     }
 }
